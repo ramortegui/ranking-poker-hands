@@ -72,4 +72,14 @@ describe HandProcess do
       expect(hand_process.two_pairs).to be false
     end
   end
+  describe "one pair" do
+    it "has one pair" do
+      hand_process = HandProcess.new("JH JH 6H 4H 5H")
+      expect(hand_process.pair).to be true
+    end
+    it "doesn't have pair" do
+      hand_process = HandProcess.new("JH KH 4H 4H 4H")
+      expect(hand_process.pair).to be false
+    end
+  end
 end

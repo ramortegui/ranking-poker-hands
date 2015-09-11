@@ -31,7 +31,19 @@ class HandProcess
     _two_pairs
   end
 
+  def pair
+    _pair
+  end
+
   private
+  def _pair
+    hash = Hash.new
+    @hand.each do |card| 
+      hash[card.val.to_i] = hash[card.val.to_i]? hash[card.val.to_i]+1 : 1
+    end
+    return true if hash.keys.count == 4
+    return false
+  end
 
   def _two_pairs
     hash = []
