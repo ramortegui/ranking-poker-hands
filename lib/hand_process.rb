@@ -27,8 +27,26 @@ class HandProcess
     _three_of_a_kind
   end
 
+  def two_pairs
+    _two_pairs
+  end
+
   private
 
+  def _two_pairs
+    hash = []
+    @hand.each do |card| 
+      hash[card.val.to_i] = hash[card.val.to_i]? hash[card.val.to_i]+1 : 1
+    end
+    twos = 0
+    hash.each do |card|
+      if card == 2
+        twos+=1
+      end
+    end
+    return true if twos == 2 
+    false
+  end
   def _flush
     suit = @hand.first.suit
     @hand.each do |card|
