@@ -19,6 +19,10 @@ class HandProcess
     _flush
   end
 
+  def straight
+    _stair?
+  end
+
   private
 
   def _flush
@@ -82,6 +86,7 @@ end
 class Card
   def initialize(card_def)
     @val, @suit = card_def.split(//)
+    @val = "1" if @val == 'A'
     @val = "10" if @val == 'T'
     @val = "11" if @val == 'J'
     @val = "12" if @val == 'Q'

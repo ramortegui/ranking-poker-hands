@@ -42,4 +42,14 @@ describe HandProcess do
       expect(hand_process.flush).to be false
     end
   end
+  describe "straight" do
+    it "has straight" do
+      hand_process = HandProcess.new("AH 2H 3H 4H 5H")
+      expect(hand_process.straight).to be true
+    end
+    it "doesn't have straight" do
+      hand_process = HandProcess.new("AH 2H 6H 4H 5H")
+      expect(hand_process.straight).to be false
+    end
+  end
 end
