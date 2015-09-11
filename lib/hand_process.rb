@@ -11,8 +11,35 @@ class HandProcess
     _four_of_a_kind
   end
 
+  def full_house
+    _full_house
+  end
+
+  def flush
+    _flush
+  end
+
   private
 
+  def _flush
+    suit = @hand.first.suit
+    @hand.each do |card|
+      return false if card.suit!= suit
+    end
+    true
+  end
+
+  def _full_house
+    hash = Hash.new
+    @hand.each do |card| 
+      hash[card.val.to_i] = hash[card.val.to_i]? hash[card.val.to_i]+1 : 1
+    end
+    return false if hash.keys.count != 2
+    first, second = hash.keys
+    return true if hash[first] == 3 and hash[second] == 2
+    return true if hash[first] == 2 and hash[second] == 3
+    return false
+  end
   def _four_of_a_kind
     hash = []
     @hand.each do |card| 
@@ -55,6 +82,7 @@ end
 class Card
   def initialize(card_def)
     @val, @suit = card_def.split(//)
+    @val = "10" if @val == 'T'
     @val = "11" if @val == 'J'
     @val = "12" if @val == 'Q'
     @val = "13" if @val == 'K'

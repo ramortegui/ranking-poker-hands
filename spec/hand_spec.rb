@@ -22,4 +22,24 @@ describe HandProcess do
       expect(hand_process.four_of_a_kind).to be false 
     end
   end
+  describe "full house" do
+    it "has full house" do
+      hand_process = HandProcess.new("KH KT KE TC TD")
+      expect(hand_process.full_house).to be true
+    end
+    it "doesn't have full house" do
+      hand_process = HandProcess.new("AH KT KE TC TD")
+      expect(hand_process.full_house).to be false
+    end
+  end
+  describe "flush" do
+    it "has flush" do
+      hand_process = HandProcess.new("AH KH KH TH TH")
+      expect(hand_process.flush).to be true
+    end
+    it "doesn't have flush" do
+      hand_process = HandProcess.new("AD KH KH TH TH")
+      expect(hand_process.flush).to be false
+    end
+  end
 end
