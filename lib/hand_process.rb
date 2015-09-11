@@ -4,7 +4,7 @@ class HandProcess
     convert(hand)
   end
   def straigh_flush
-    (same_sign? && stair?)    
+    (same_suit? && stair?)    
   end
 
   private
@@ -15,10 +15,10 @@ class HandProcess
     end
   end
 
-  def same_sign?
-    sign = @hand.first.sign
+  def same_suit?
+    suit = @hand.first.suit
     @hand.each do |card|
-      return false if card.sign != sign 
+      return false if card.suit != suit
     end
     return true
   end
@@ -40,10 +40,10 @@ end
 
 class Card
   def initialize(card_def)
-    @val, @sign = card_def.split(//)
-    @val = "10" if @val == 'J'
-    @val = "11" if @val == 'Q'
-    @val = "12" if @val == 'K'
+    @val, @suit = card_def.split(//)
+    @val = "11" if @val == 'J'
+    @val = "12" if @val == 'Q'
+    @val = "13" if @val == 'K'
   end
-  attr_reader :val, :sign 
+  attr_reader :val, :suit
 end
