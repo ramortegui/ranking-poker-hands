@@ -1,21 +1,35 @@
 class HandProcess
   def initialize(hand)
     @hand = []
-    convert(hand)
+    _convert(hand)
   end
   def straigh_flush
-    (same_suit? && stair?)    
+    (_same_suit? && _stair?)    
+  end
+
+  def four_of_a_kind
+    _four_of_a_kind
   end
 
   private
 
-  def convert(hand)
+  def _four_of_a_kind
+    hash = []
+    @hand.each do |card| 
+      hash[card.val.to_i] = hash[card.val.to_i]? hash[card.val.to_i]+1 : 1
+    end
+    hash.each do |card|
+      return true if card == 4
+    end
+    false
+  end
+  def _convert(hand)
     hand.split(' ').each do |card_def|
       @hand << Card.new(card_def)
     end
   end
 
-  def same_suit?
+  def _same_suit?
     suit = @hand.first.suit
     @hand.each do |card|
       return false if card.suit != suit
@@ -23,7 +37,7 @@ class HandProcess
     return true
   end
 
-  def stair?
+  def _stair?
     arr = []
     @hand.each do |card| 
       arr << card.val.to_i
