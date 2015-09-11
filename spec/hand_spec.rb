@@ -82,4 +82,10 @@ describe HandProcess do
       expect(hand_process.pair).to be false
     end
   end
+  describe "high card" do
+    it "has the high card" do
+      hand_process = HandProcess.new("JH JH KH 4H 5H")
+      expect(hand_process.high_card).to be 13
+    end
+  end
 end

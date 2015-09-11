@@ -35,7 +35,22 @@ class HandProcess
     _pair
   end
 
+  def high_card
+    _high_card
+  end
+
   private
+  
+  def _high_card
+    high = @hand.first.val.to_i
+    @hand.each do |card| 
+      if card.val.to_i > high
+       high = card.val.to_i
+      end
+    end
+    high 
+  end
+
   def _pair
     hash = Hash.new
     @hand.each do |card| 
