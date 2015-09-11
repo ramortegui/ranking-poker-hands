@@ -23,6 +23,10 @@ class HandProcess
     _stair?
   end
 
+  def three_of_a_kind
+    _three_of_a_kind
+  end
+
   private
 
   def _flush
@@ -43,6 +47,14 @@ class HandProcess
     return true if hash[first] == 3 and hash[second] == 2
     return true if hash[first] == 2 and hash[second] == 3
     return false
+  end
+  def _three_of_a_kind
+    hash = []
+    @hand.each do |card| 
+      hash[card.val.to_i] = hash[card.val.to_i]? hash[card.val.to_i]+1 : 1
+      return true if hash[card.val.to_i] == 3
+    end
+    false
   end
   def _four_of_a_kind
     hash = []

@@ -52,4 +52,15 @@ describe HandProcess do
       expect(hand_process.straight).to be false
     end
   end
+
+  describe "three of a kind" do
+    it "has three of a kind" do
+      hand_process = HandProcess.new("JH JH JH 4H 5H")
+      expect(hand_process.three_of_a_kind).to be true
+    end
+    it "doesn't have straight" do
+      hand_process = HandProcess.new("JH JH 4H 4H 5H")
+      expect(hand_process.three_of_a_kind).to be false
+    end
+  end
 end
