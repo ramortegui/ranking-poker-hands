@@ -1,6 +1,8 @@
 class HandProcess
+  attr_reader :rank, :hand
   def initialize(hand)
     @hand = []
+    @rank = 0
     _convert(hand)
   end
   def straigh_flush
@@ -39,8 +41,78 @@ class HandProcess
     _high_card
   end
 
+  def best_hand
+    _best_hand
+  end
+
+  def get_second_rank(rank)
+    _get_second_rank(rank)
+  end
+
+  def get_second_rank_full_house
+    _get_second_rank_full_house
+  end
+
+  def get_side_card(card)
+    _get_side_card(card)
+  end
+
   private
-  
+    
+  def _get_side_card(side)
+    hand = []
+    @hand.each do |card|
+      if hand.include? card.val.to_i
+         hand.delete card.val.to_i
+      else
+        hand << card.val.to_i
+      end
+    end
+    hand.sort!.reverse!
+    hand[side]
+  end
+
+  def _best_hand
+    if straigh_flush
+      return "straigh_flush"
+    elsif _four_of_a_kind
+      return "four_of_a_kind"
+    elsif _full_house
+      return "full_house"
+    elsif _flush
+      return "flush"
+    elsif _stair?
+      return "straigh"
+    elsif _three_of_a_kind
+      return "three_of_a_kind"
+    elsif _two_pairs
+      return "two_pairs"
+    elsif _pair
+      return "pair"
+    else
+      _high_card
+      return "high_card"
+    end
+    return "error"
+  end
+
+  def _get_second_rank(rank)
+    new_rank = rank
+    hash = Hash.new
+    @hand.each do |card| 
+      hash[card.val.to_i] = hash[card.val.to_i]? hash[card.val.to_i]+1 : 1
+    end
+
+    hash.keys.each do |key|
+      if hash[key] == 2
+        if rank > key
+          rank = key
+        end
+      end
+    end
+    rank 
+  end
+
   def _high_card
     high = @hand.first.val.to_i
     @hand.each do |card| 
@@ -56,32 +128,59 @@ class HandProcess
     @hand.each do |card| 
       hash[card.val.to_i] = hash[card.val.to_i]? hash[card.val.to_i]+1 : 1
     end
+    
+    _get_rank(hash,2)
+    
     return true if hash.keys.count == 4
     return false
   end
 
+  def _get_rank(hash,cond)
+
+    hash.keys.each do |key|
+      if hash[key] == cond
+        @rank = key if @rank < key 
+      end
+    end
+  end
+
   def _two_pairs
-    hash = []
+    hash = Hash.new
     @hand.each do |card| 
       hash[card.val.to_i] = hash[card.val.to_i]? hash[card.val.to_i]+1 : 1
     end
-    twos = 0
-    hash.each do |card|
-      if card == 2
-        twos+=1
+    return false if hash.keys.count != 3 
+    hash.keys.each do |key|
+      if hash[key] == 2
+        _get_rank(hash,2)
+        return true
       end
     end
-    return true if twos == 2 
+    @rank = 0
     false
   end
   def _flush
     suit = @hand.first.suit
     @hand.each do |card|
+      if @rank < card.val.to_i
+        @rank = card.val.to_i
+      end
       return false if card.suit!= suit
     end
     true
   end
 
+  def _get_second_rank_full_house
+    hash = Hash.new
+    @hand.each do |card| 
+      hash[card.val.to_i] = hash[card.val.to_i]? hash[card.val.to_i]+1 : 1
+    end
+    first, second = hash.keys
+    if hash[first] == 3 and hash[second] == 2
+      return second
+    end
+    return first
+  end
   def _full_house
     hash = Hash.new
     @hand.each do |card| 
@@ -89,15 +188,25 @@ class HandProcess
     end
     return false if hash.keys.count != 2
     first, second = hash.keys
-    return true if hash[first] == 3 and hash[second] == 2
-    return true if hash[first] == 2 and hash[second] == 3
+    if hash[first] == 3 and hash[second] == 2
+      @rank = first
+      return true
+    end
+    if hash[first] == 2 and hash[second] == 3
+      @rank = second
+      return true
+    end
     return false
   end
   def _three_of_a_kind
     hash = []
+    val = 0;
     @hand.each do |card| 
       hash[card.val.to_i] = hash[card.val.to_i]? hash[card.val.to_i]+1 : 1
-      return true if hash[card.val.to_i] == 3
+      if hash[card.val.to_i] == 3 
+        @rank = card.val.to_i
+        return true 
+      end
     end
     false
   end
@@ -105,14 +214,15 @@ class HandProcess
     hash = []
     @hand.each do |card| 
       hash[card.val.to_i] = hash[card.val.to_i]? hash[card.val.to_i]+1 : 1
-    end
-    hash.each do |card|
-      return true if card == 4
+      if hash[card.val.to_i] == 4 
+        @rank = card.val.to_i
+        return true 
+      end
     end
     false
   end
   def _convert(hand)
-    hand.split(' ').each do |card_def|
+    hand.each do |card_def|
       @hand << Card.new(card_def)
     end
   end
@@ -136,6 +246,7 @@ class HandProcess
       return false unless ant+1 == val 
       ant += 1
     end
+    @rank = arr.last
     true
   end
 end
